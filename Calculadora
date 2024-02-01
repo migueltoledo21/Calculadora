@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tesorería LMGAL - Calculadora de Intereses</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -50,7 +51,6 @@
       margin-top: 20px;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script>
     function calcularIntereses() {
       const tna = parseFloat(document.getElementById('tna').value);
@@ -70,6 +70,8 @@
 
     function generarPDF() {
       const pdf = new jsPDF();
+      pdf.text("Tesorería LMGAL - Resultados", 20, 10);
+
       const contenido = `
         Total Interés por Mora: $${document.getElementById('interesMora').textContent}
         Total Deuda en Concepto de Cuota: $${document.getElementById('deudaCuota').textContent}
@@ -112,3 +114,4 @@
   </div>
 </body>
 </html>
+
