@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tesorería LMGAL - Calculadora de Intereses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .title, .subtitle {
+      text-align: center;
+    }
+
+    .data-inputs {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #0066cc;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script>
+    function calcularIntereses() {
+      const tna = parseFloat(document.getElementById('tna').value);
+      const deuda = parseFloat(document.getElementById('deuda').value);
+      const vencimiento = new Date(document.getElementById('vencimiento').value);
+      const pago = new Date();
+      const diasMora = Math.floor((pago - vencimiento) / (1000 * 60 * 60 * 24));
+      const interesMora = (tna / 365) * diasMora * deuda;
+      const deudaCuota = deuda;
+
+      const total = interesMora + deudaCuota;
+
+      document.getElementById('interesMora').textContent = interesMora.toFixed(2);
+      document.getElementById('deudaCuota').textContent = deudaCuota.toFixed(2);
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function generarPDF() {
+      const pdf = new jsPDF();
+      const contenido = `
+        Total Interés por Mora: $${document.getElementById('interesMora').textContent}
+        Total Deuda en Concepto de Cuota: $${document.getElementById('deudaCuota').textContent}
+        Total: $${document.getElementById('total').textContent}
+      `;
+
+      pdf.text(contenido, 20, 30);
+      pdf.save('tesoreria_lmgal.pdf');
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Tesorería LMGAL</h1>
+    <h2 class="subtitle">Calculadora de Intereses</h2>
+
+    <div class="data-inputs">
+      <label for="tna">TNA (Tasa Nominal Anual):</label>
+      <input type="number" id="tna" placeholder="Ingrese TNA">
+
+      <label for="deuda">Deuda en Concepto de mora:</label>
+      <input type="number" id="deuda" placeholder="Ingrese deuda">
+
+      <label for="vencimiento">Día de vencimiento:</label>
+      <input type="date" id="vencimiento">
+
+      <label for="pago">Día de pago (fijado al día de la fecha):</label>
+      <input type="text" id="pago" value="Fecha actual" readonly>
+
+      <button onclick="calcularIntereses()">Calcular</button>
+    </div>
+
+    <div class="result">
+      <p>Total Interés por Mora: $<span id="interesMora">0.00</span></p>
+      <p>Total Deuda en Concepto de Cuota: $<span id="deudaCuota">0.00</span></p>
+      <p>Total: $<span id="total">0.00</span></p>
+    </div>
+
+    <button onclick="generarPDF()">Descargar PDF</button>
+  </div>
+</body>
+</html>
